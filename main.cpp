@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------
-LAB EXERCISE - LED blinky with interrupts
+LAB EXERCISE - Simple LED blinky
  ----------------------------------------
-	In this exercise we will create a program which uses a button to turn on and off a blinky LED.
+In this exercise we will create a program that blinks a LED while the user button is being pressed.
 
 	GOOD LUCK!
  *----------------------------------------------------------------------------*/
@@ -12,61 +12,28 @@ LAB EXERCISE - LED blinky with interrupts
 DigitalOut Led_out(LED1);
 
 
-// Create an InterruptIn object for the button. 
-InterruptIn button_press(USER_BUTTON);
-
-
-// Create a recurring interruption.
-Ticker blinky;
-
-//Button handler
-void button_ISR(){
-Led_out = !Led_out;
-}
-
-//Recurrent handler
-void blink(){
-Led_out = !Led_out;
-}
+// Create a DigitalIn objects for the button. 
+DigitalIn button_press(USER_BUTTON);
 
 /*----------------------------------------------------------------------------
  MAIN function
  *----------------------------------------------------------------------------*/
 int main() {
-// Set up
-	bool onf = false;
-	button_press.rise(&button_ISR);
-while(true)
-{
-  
- //Interrupt sub-routine button_ISR will be called
-//when a rising edge occurs.
- //waiting for interrupts
 
-   if(!button_press)
-	 {
-				if(!onf)
-				{
-			   blinky.attach(&blink, 0.5);
-			   onf = true; 
-				 
-				}
-			
-			
-			else
-			{	
-				blinky.detach();
-				Led_out=0;
-				onf = false;
-				Led_out=0;
-			}
-			
-	}
- }
+	while(1) {
+		// The buttons is active low
+		Led_out = 0;
+		
+    // If the button is pressed the LED blinks twice per second
+    if (!button_press)
+		{
+    Led_out = 1; //toggle the state of Led_out
+		wait(0.25);
+		Led_out = 0;
+		wait(0.25);
+		}
+		// Otherwise the LED is switch off.
+    else 
+			Led_out=0;
+  }
 }
-
-
-			 
-       			 
-
-
